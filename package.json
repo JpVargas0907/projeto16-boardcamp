@@ -1,0 +1,17 @@
+{
+  "name": "boardcamp-back",
+  "version": "1.0.0",
+  "description": "Back end boardcamp",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "author": "joaopaulovargas",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "nodemon": "^2.0.20",
+    "pg": "^8.8.0"
+  }
+}
