@@ -11,6 +11,7 @@
   "author": "joaopaulovargas",
   "license": "ISC",
   "dependencies": {
+    "dayjs": "^1.11.7",
     "express": "^4.18.2",
     "nodemon": "^2.0.20",
     "pg": "^8.8.0"

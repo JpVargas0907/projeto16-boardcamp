@@ -116,18 +116,33 @@ server.get('/customers/:id', async (request, response) => {
 });
 
 server.post('/customers', async (request, response) => {
+  const { name, phone, cpf, birthday } = request
+  const time = dayjs();
+  const searchCPF = await connection.query('SELECT * FROM customers WHERE cpf = $1', [cpf]);
   try {
-    
+    if (typeof (cpf) === String && cpf.length === 10 || cpf.length === 11 && name !== null && birthday < time && !searchCPF) {
+      const newCustomer = await connection.query('INSERT INTO customers (name, phone, cpf, birthday) VALUES ($1, $2, $3, $4, $5)', [name, phone, cpf, birthday]);
+
+      response.sendStatus(201);
+    }
   } catch (error) {
-    
+    response.sendStatus(409);
   }
 });
 
 server.put('/customers/:id', async (request, response) => {
+  const id = request.params.id;
+  const { name, phone, cpf, birthday } = request;
+  const searchCPF = await connection.query('SELECT * FROM customers WHERE cpf = $1', [cpf]);
+
   try {
-    
+    if (typeof (cpf) === String && cpf.length === 10 || cpf.length === 11 && name !== null && birthday < time && !searchCPF) {
+      const updateCustomer = await connection.query('UPDATE customers SET name=$1, phone=$2, cpf=$3, birthday=$4 WHERE id=$5', [name, phone, cpf, birthday, id]);
+
+      response.sendStatus(201);
+    }
   } catch (error) {
-    
+    response.sendStatus(409);
   }
 });
 
@@ -135,50 +150,50 @@ server.put('/customers/:id', async (request, response) => {
 
 server.get('/rentals', async (request, response) => {
   try {
-    
+
   } catch (error) {
-    
+
   }
 });
 
 server.get('/rentals/:customerId', async (request, response) => {
   try {
-    
+
   } catch (error) {
-    
+
   }
 });
 
 
 server.get('/rentals/:gameId', async (request, response) => {
   try {
-    
+
   } catch (error) {
-    
+
   }
 });
 
 server.post('/rentals', async (request, response) => {
   try {
-    
+
   } catch (error) {
-    
+
   }
 });
 
 server.post('/rentals/:id', async (request, response) => {
   try {
-    
+
   } catch (error) {
-    
+
   }
 });
 
 server.delete('/rentals/:id', async (request, response) => {
   try {
-    
+
   } catch (error) {
-    
+
   }
 });
 
