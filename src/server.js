@@ -14,8 +14,175 @@ const connection = new Pool({
 const server = express();
 server.use(express.json);
 
+// TESTE
+
+server.get('/', (request, response) => {
+  response.send("OK");
+});
+
+// CRUD CATEGORIAS 
+
+server.get('/categories', async (request, response) => {
+  try {
+    const categorias = await connection.query('SELECT * FROM categories');
+    response.send(categorias.rows)
+  } catch (error) {
+    response.sendStatus(404);
+  }
+});
+
+server.post('/categories', async (request, response) => {
+  const { name } = request
+  const searchCategory = await connection.query('SELECT * FROM categories WHERE name = $1', [name]);
+  try {
+    if (name !== null && !searchCategory) {
+      const newCategory = await connection.query('INSERT INTO categories (name) VALUES ($1)', [name]);
+      if (newCategory) {
+        response.send('Nova Categoria Cadastrada com sucesso');
+      }
+    }
+  } catch (error) {
+
+  }
+});
+
+// CRUD JOGOS
+
+server.get('/games', async (request, response) => {
+  try {
+    const games = await connection.query('SELECT * FROM games');
+    response.send(games.rows)
+  } catch (error) {
+    response.sendStatus(404);
+  }
+});
+
+server.get('/games/:name', async (request, response) => {
+  const name = request.params.name;
+  try {
+    const games = await connection.query('SELECT * FROM games WHERE name = $1', [name]);
+    response.send(games.rows)
+  } catch (error) {
+    response.sendStatus(404);
+  }
+});
+
+server.post('/games', async (request, response) => {
+  const { name, image, stockTotal, categoryId, pricePerDay } = request
+  const verifyCategory = await connection.query('SELECT * FROM categories WHERE id = $1', [categoryId]);
+
+  try {
+    if (name !== null && stockTotal > 0 && pricePerDay > 0 && verifyCategory) {
+      const newGame = await connection.query('INSERT INTO games (name, image, stockTotal, categoryId, pricePerDay) VALUES ($1, $2, $3, $4, $5)', [name, image, stockTotal, categoryId, pricePerDay]);
+      if (newGame) {
+        response.send('Novo jogo cadastrado com sucesso!')
+      }
+    }
+
+  } catch (error) {
+    response.sendStatus(404);
+  }
+});
+
+// CRUD CLIENTES 
+
+server.get('/customers', async (request, response) => {
+  try {
+    const customers = await connection.query('SELECT * FROM customers');
+    response.send(customers.rows)
+  } catch (error) {
+    response.sendStatus(404);
+  }
+});
+
+server.get('/customers/:cpf', async (request, response) => {
+  const cpf = request.params.cpf
+  try {
+    const customers = await connection.query('SELECT * FROM customers WHERE cpf = $1', [cpf]);
+    response.send(customers.rows)
+  } catch (error) {
+    response.sendStatus(404);
+  }
+});
+
+server.get('/customers/:id', async (request, response) => {
+  const id = request.params.id
+  try {
+    const customers = await connection.query('SELECT * FROM customers WHERE id = $1', [id]);
+    response.send(customers.rows)
+  } catch (error) {
+    response.sendStatus(404);
+  }
+});
+
+server.post('/customers', async (request, response) => {
+  try {
+    
+  } catch (error) {
+    
+  }
+});
+
+server.put('/customers/:id', async (request, response) => {
+  try {
+    
+  } catch (error) {
+    
+  }
+});
+
+// CRUD ALUGUEIS
+
+server.get('/rentals', async (request, response) => {
+  try {
+    
+  } catch (error) {
+    
+  }
+});
+
+server.get('/rentals/:customerId', async (request, response) => {
+  try {
+    
+  } catch (error) {
+    
+  }
+});
+
+
+server.get('/rentals/:gameId', async (request, response) => {
+  try {
+    
+  } catch (error) {
+    
+  }
+});
+
+server.post('/rentals', async (request, response) => {
+  try {
+    
+  } catch (error) {
+    
+  }
+});
+
+server.post('/rentals/:id', async (request, response) => {
+  try {
+    
+  } catch (error) {
+    
+  }
+});
+
+server.delete('/rentals/:id', async (request, response) => {
+  try {
+    
+  } catch (error) {
+    
+  }
+});
 
 
 server.listen(4000, () => {
-    console.log("Listening on port 4000");
+  console.log("Listening on port 4000");
 })
