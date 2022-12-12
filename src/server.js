@@ -205,14 +205,6 @@ server.get('/rentals/:gameId', async (request, response) => {
 });
 
 server.post('/rentals', async (request, response) => {
-  try {
-
-  } catch (error) {
-
-  }
-});
-
-server.post('/rentals/:id', async (request, response) => {
   const {customerId, gameId, daysRented} = request;
   const date = dayjs();
   const price = await connection.query("SELECT pricePerDay FROM games WHERE id = $1", [gameId])
@@ -226,6 +218,16 @@ server.post('/rentals/:id', async (request, response) => {
     } else {
       response.sendStatus(400);
     }
+  } catch (error) {
+
+  }
+});
+
+server.post('/rentals/:id', async (request, response) => {
+  const [id] = request.params;
+  
+  try {
+
   } catch (error) {
 
   }
