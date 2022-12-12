@@ -150,26 +150,57 @@ server.put('/customers/:id', async (request, response) => {
 
 server.get('/rentals', async (request, response) => {
   try {
+    const rentals = await connection.query('SELECT games.*, customers.* FROM games JOIN rentals ON games.id = rentals.gameId JOIN customers ON customers.id = rentals.customerId;');
 
+    response.send(rentals.rows);
   } catch (error) {
-
+    response.send(error);
   }
 });
 
 server.get('/rentals/:customerId', async (request, response) => {
+  const { customerId } = request.params;
+  const customerFilter = [];
+
   try {
+    const rentals = await connection.query('SELECT games.*, customers.* FROM games JOIN rentals ON games.id = rentals.gameId JOIN customers ON customers.id = rentals.customerId;');
 
+    rentals.map(rental => {
+      if(rental.customerId === customerId){
+        customerFilter = [...customerFilter, rental.rows];
+      }
+    });
+    if (customerFilter !== []) {
+      response.send(customerFilter);
+    } else {
+      response.sendStatus(404);
+    }
   } catch (error) {
-
+    response.send(error)
   }
 });
 
 
 server.get('/rentals/:gameId', async (request, response) => {
+  const { gameId } = request.params;
+  const gameFilter = [];
+
   try {
+    const rentals = await connection.query('SELECT games.*, customers.* FROM games JOIN rentals ON games.id = rentals.gameId JOIN customers ON customers.id = rentals.customerId;');
 
+    rentals.map(rental => {
+      if(rental.gameId === gameId){
+        gameFilter = [...gameFilter, rental.rows];
+      }
+    });
+
+    if (gameFilter !== []) {
+      response.send(gameFilter);
+    } else {
+      response.sendStatus(404);
+    }
   } catch (error) {
-
+    response.send(error)
   }
 });
 
