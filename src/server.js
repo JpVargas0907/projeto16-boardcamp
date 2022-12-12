@@ -213,8 +213,19 @@ server.post('/rentals', async (request, response) => {
 });
 
 server.post('/rentals/:id', async (request, response) => {
-  try {
+  const {customerId, gameId, daysRented} = request;
+  const date = dayjs();
+  const price = await connection.query("SELECT pricePerDay FROM games WHERE id = $1", [gameId])
+  const verifyCustomerId = await connection.query("SELECT * FROM customers WHERE id=$1", [customerId]);
+  const verifyGameId = await connection.query("SELECT * FROM games WHERE id=$1", [gameId]);
+  const totalRentPrice = price * daysRented;
 
+  try {
+    if(verifyCustomerId && verifyGameId && daysRented > 0){
+      await connection.query("INSERT INTO rentals (customerId, gameId, daysRented, rentDate, originalPrice) VALUES ($1,$2,$3,$4,$5)", [customerId, gameId, daysRented, date, totalRentPrice])
+    } else {
+      response.sendStatus(400);
+    }
   } catch (error) {
 
   }
