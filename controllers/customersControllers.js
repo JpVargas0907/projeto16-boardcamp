@@ -10,7 +10,7 @@ export async function getCustomers(req, res){
 }
 
 export async function getCustomerById(req, res){
-    const id = req.params;
+    const id = req.params.id;
     try {
         const customer = await db.query(`SELECT * FROM customers WHERE id = $1`, [id]);
         res.send(customer.rows[0]);
@@ -30,7 +30,7 @@ export async function registerCustomer(req, res){
 }
 
 export async function updateCustomer(req, res){
-    const id = req.params;
+    const id = req.params.id;
     const {name, phone, cpf, birthday } = req.body;
 
     try {

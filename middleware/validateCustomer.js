@@ -3,12 +3,13 @@ import { customerSchema } from '../schemas/customerSchema.js';
 
 async function validateCustomer(req, res, next){
     const validation = customerSchema.validate(req.body);
+    const id = req.params.id;
     const { cpf } = req.body;
     const verifyCustomerCpfExists = await db.query(`SELECT * FROM customers WHERE cpf = $1`, [cpf]);
 
     if(validation.error){
         return res.sendStatus(400);
-    } else if (verifyCustomerCpfExists.rowCount > 0) {
+    } else if (verifyCustomerCpfExists.rowCount > 0 && verifyCustomerCpfExists.rows[0].id != id) {
         return res.sendStatus(409);
     }
 
