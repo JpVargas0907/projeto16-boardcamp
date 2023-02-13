@@ -27,3 +27,33 @@ export async function registerRental(req, res){
         res.send(error.message);
     }
 }
+
+export async function finalizeRental(req, res){
+    const id = req.params.id;
+
+    try {
+        const rental = await db.query('SELECT * FROM rentals WHERE id = $1', [id]);
+
+        if (!rental.rows[0]) {
+            return res.sendStatus(404);
+        }
+        
+        if (rental.rows[0].returnDate) {
+            return res.sendStatus(400);
+        }
+
+        const game = await db.query('SELECT * FROM games WHERE id = $1', [rental.rows[0].gameId]);
+
+        const rentDate = dayjs(rental.rows[0].rentDate);
+        const returnDate = dayjs();
+        const rentedDays = rental.rows[0].daysRented;
+        const delayDays = Math.max(0, returnDate.diff(rentDate, 'day') - rentedDays);
+        const delayFee = delayDays * game.rows[0].pricePerDay;
+
+        await db.query('UPDATE rentals SET "returnDate" = $1, "delayFee" = $2 WHERE id = $3', [returnDate, delayFee, id]);
+        
+        return res.sendStatus(200);
+    } catch (error) {
+        res.send(error.message);
+    }
+}
