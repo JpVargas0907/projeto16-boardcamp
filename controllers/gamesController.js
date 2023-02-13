@@ -3,7 +3,7 @@ import { db } from '../database/postgres.js';
 export async function searchGames(req, res){
     try {
         const games = await db.query('SELECT * FROM games');
-        res.status(200).send(games.rows);
+        res.status(201).send(games.rows);
     } catch (error) {
         res.status(404).send(error.message);
     }
