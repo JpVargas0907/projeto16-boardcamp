@@ -8,7 +8,7 @@ async function validateRental(req, res, next){
     const stockTotal = await db.query(`SELECT "stockTotal" FROM games WHERE id = $1`, [gameId]);
 
     if (searchCustomer.rowCount === 0 || searchGame.rowCount === 0 || daysRented <= 0 || stockTotal <= 0) {
-        return res.status(400)
+        return res.sendStatus(400)
     }
 
     next();

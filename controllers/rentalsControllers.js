@@ -6,7 +6,7 @@ export async function getRentals(req, res){
         const rentals = await db.query('SELECT * FROM rentals JOIN customers ON rentals."customerId" = customers.id JOIN games ON rentals."gameId" = games.id');
         res.send(rentals.rows);
     } catch (error) {
-        res.status(404).send(error.message);
+        res.sendStatus(404).send(error.message);
     }
 }
 
@@ -22,7 +22,7 @@ export async function registerRental(req, res){
     try {
         await db.query(`INSERT INTO rentals ("customerId", "gameId", "rentDate", "daysRented", "returnDate", "originalPrice", "delayFee")  
         VALUES ($1, $2, $3, $4, $5, $6, $7)`, [customerId, gameId, rentDate, daysRented, returnDate, originalPrice.rows[0].pricePerDay * 3, delayFee]);
-        res.status(201);
+        res.sendStatus(201);
     } catch (error) {
         res.send(error.message);
     }
@@ -35,11 +35,11 @@ export async function finalizeRental(req, res){
         const rental = await db.query('SELECT * FROM rentals WHERE id = $1', [id]);
 
         if (!rental.rows[0]) {
-            return res.status(404);
+            return res.sendStatus(404);
         }
         
         if (rental.rows[0].returnDate) {
-            return res.status(400);
+            return res.sendStatus(400);
         }
 
         const game = await db.query('SELECT * FROM games WHERE id = $1', [rental.rows[0].gameId]);
@@ -65,12 +65,12 @@ export async function deleteRental(req, res){
         const rental = await db.query(`SELECT * FROM rentals WHERE id = $1`, [id]);
 
         if(rental.rowCount === 0){
-            return res.sendStatus(404);
+            return res.sendsendStatus(404);
         } else if (rental.rows[0].returnDate === null){
-            return res.sendStatus(400);
+            return res.sendsendStatus(400);
         } else {
             await db.query(`DELETE FROM rentals WHERE id = $1`, [id]);
-            res.sendStatus(200);
+            res.sendsendStatus(200);
         }
 
     } catch (error) {

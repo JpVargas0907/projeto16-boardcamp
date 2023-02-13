@@ -8,9 +8,9 @@ async function validateCustomer(req, res, next){
     const verifyCustomerCpfExists = await db.query(`SELECT * FROM customers WHERE cpf = $1`, [cpf]);
 
     if(validation.error){
-        return res.status(400);
+        return res.sendStatus(400);
     } else if (verifyCustomerCpfExists.rowCount > 0 && verifyCustomerCpfExists.rows[0].id != id) {
-        return res.status(409);
+        return res.sendStatus(409);
     }
 
     next();
