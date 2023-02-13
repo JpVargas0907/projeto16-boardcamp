@@ -7,7 +7,7 @@ async function validateGame(req, res, next){
     const verifyGameNameExists = await db.query(`SELECT * FROM games WHERE name = $1`, [name]);
 
     if(validation.error){
-        return res.sendStatus(422);
+        return res.sendStatus(400);
     } else if (name === null || stockTotal <= 0 || pricePerDay <= 0){
         return res.sendStatus(400);
     } else if (verifyGameNameExists.rowCount > 0){
