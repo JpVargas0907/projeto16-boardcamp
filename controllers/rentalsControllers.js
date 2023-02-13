@@ -6,7 +6,7 @@ export async function getRentals(req, res){
         const rentals = await db.query('SELECT * FROM rentals JOIN customers ON rentals."customerId" = customers.id JOIN games ON rentals."gameId" = games.id');
         res.send(rentals.rows);
     } catch (error) {
-        res.sendStatus(404).send(error.message);
+        res.status(404).send(error.message);
     }
 }
 
@@ -52,7 +52,7 @@ export async function finalizeRental(req, res){
 
         await db.query('UPDATE rentals SET "returnDate" = $1, "delayFee" = $2 WHERE id = $3', [returnDate, delayFee, id]);
         
-        return res.sendStatus(200);
+        res.sendStatus(200);
     } catch (error) {
         res.send(error.message);
     }
@@ -65,12 +65,12 @@ export async function deleteRental(req, res){
         const rental = await db.query(`SELECT * FROM rentals WHERE id = $1`, [id]);
 
         if(rental.rowCount === 0){
-            return res.sendsendStatus(404);
+            res.sendStatus(404);
         } else if (rental.rows[0].returnDate === null){
-            return res.sendsendStatus(400);
+            res.sendStatus(400);
         } else {
             await db.query(`DELETE FROM rentals WHERE id = $1`, [id]);
-            res.sendsendStatus(200);
+            res.sendStatus(200);
         }
 
     } catch (error) {

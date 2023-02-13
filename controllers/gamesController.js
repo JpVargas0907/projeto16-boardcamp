@@ -3,9 +3,9 @@ import { db } from '../database/postgres.js';
 export async function searchGames(req, res){
     try {
         const games = await db.query('SELECT * FROM games');
-        res.sendStatus(201).send(games.rows);
+        res.send(games.rows);
     } catch (error) {
-        res.sendStatus(404).send(error.message);
+        res.status(404).send(error.message);
     }
 }
 
@@ -15,6 +15,6 @@ export async function registerGame(req, res){
         await db.query(`INSERT INTO games (name, image, stockTotal, categoryId, pricePerDay) VALUES ($1, $2, $3, $4, $5)`, [name, image, stockTotal, categoryId, pricePerDay]);
         res.sendStatus(201);
     } catch (error) {
-        res.sendStatus(500).send(error.message);
+        res.status(500).send(error.message);
     }
 }

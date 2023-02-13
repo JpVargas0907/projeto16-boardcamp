@@ -3,9 +3,9 @@ import { db } from "../database/postgres.js";
 export async function getCustomers(req, res){
     try {
         const customers = await db.query('SELECT * FROM customers');
-        res.sendStatus(200).send(customers.rows);
+        res.status(200).send(customers.rows);
     } catch (error) {
-        res.sendStatus(404).send(error.message);
+        res.status(404).send(error.message);
     }
 }
 
